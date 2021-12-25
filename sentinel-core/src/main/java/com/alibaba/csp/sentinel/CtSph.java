@@ -120,19 +120,24 @@ public class CtSph implements Sph {
         if (context instanceof NullContext) {
             // The {@link NullContext} indicates that the amount of context has exceeded the threshold,
             // so here init the entry only. No rule checking will be done.
+            // 创建上下文时,如果超过最大上下文数 阈值,就不进行规则检查
             return new CtEntry(resourceWrapper, null, context);
         }
 
         if (context == null) {
             // Using default context.
+            // 创建资源    EntranceNode  放入contextNameNodeMap   放入root节点set中
+            // 创建上下文  放入ThreadLocal
             context = InternalContextUtil.internalEnter(Constants.CONTEXT_DEFAULT_NAME);
         }
 
         // Global switch is close, no rule checking will do.
+        // 全局开关关闭，无法进行规则检查。
         if (!Constants.ON) {
             return new CtEntry(resourceWrapper, null, context);
         }
 
+        // 获取规则检查链  spi ProcessorSlot
         ProcessorSlot<Object> chain = lookProcessChain(resourceWrapper);
 
         /*
