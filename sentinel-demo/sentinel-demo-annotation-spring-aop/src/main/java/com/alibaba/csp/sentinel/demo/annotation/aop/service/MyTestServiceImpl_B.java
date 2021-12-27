@@ -15,16 +15,23 @@
  */
 package com.alibaba.csp.sentinel.demo.annotation.aop.service;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  * @author Eric Zhao
  */
-public interface TestService {
+@Service
+public class MyTestServiceImpl_B {
 
-    void test();
+    @Autowired
+    private MyTestServiceImpl_C myTestServiceImpl_c;
 
-    String hello(long s);
+    @SentinelResource(value = "mytestB")
+    public void mytestB() {
+        System.out.println("mytestB");
+        myTestServiceImpl_c.mytestC();
+    }
 
-    String helloAnother(String name);
-
-    String mytest();
 }

@@ -15,16 +15,18 @@
  */
 package com.alibaba.csp.sentinel.demo.annotation.aop.service;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import org.springframework.stereotype.Service;
+
 /**
  * @author Eric Zhao
  */
-public interface TestService {
+@Service
+public class MyTestServiceImpl_C {
 
-    void test();
+    @SentinelResource(value = "mytestC")
+    public void mytestC() {
+        System.out.println("mytestC");
+    }
 
-    String hello(long s);
-
-    String helloAnother(String name);
-
-    String mytest();
 }

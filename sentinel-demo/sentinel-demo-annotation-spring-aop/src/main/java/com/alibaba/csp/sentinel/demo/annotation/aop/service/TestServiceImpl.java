@@ -54,6 +54,13 @@ public class TestServiceImpl implements TestService {
         return "Hello, " + name;
     }
 
+    @Override
+    @SentinelResource(value = "mytest", defaultFallback = "defaultFallback",
+            exceptionsToIgnore = {IllegalStateException.class})
+    public String mytest() {
+        return "null";
+    }
+
     public String helloFallback(long s, Throwable ex) {
         // Do some log here.
         ex.printStackTrace();

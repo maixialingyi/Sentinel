@@ -15,6 +15,9 @@
  */
 package com.alibaba.csp.sentinel.demo.annotation.aop.controller;
 
+import com.alibaba.csp.sentinel.demo.annotation.aop.service.MyTestServiceImpl_A;
+import com.alibaba.csp.sentinel.demo.annotation.aop.service.MyTestServiceImpl_B;
+import com.alibaba.csp.sentinel.demo.annotation.aop.service.MyTestServiceImpl_C;
 import com.alibaba.csp.sentinel.demo.annotation.aop.service.TestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +47,17 @@ public class DemoController {
     @GetMapping("/baz/{name}")
     public String apiBaz(@PathVariable("name") String name) {
         return service.helloAnother(name);
+    }
+
+    @Autowired
+    private MyTestServiceImpl_A myTestServiceImpl_a;
+    @Autowired
+    private MyTestServiceImpl_B myTestServiceImpl_b;
+
+    @GetMapping("/mytest")
+    public String mytest() {
+        myTestServiceImpl_a.mytestA();
+        myTestServiceImpl_b.mytestB();
+        return "success";
     }
 }
