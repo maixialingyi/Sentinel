@@ -27,8 +27,10 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class MetricBucket {
 
+    // 多维度MetricEvent,数据统计
     private final LongAdder[] counters;
 
+    // 最小
     private volatile long minRt;
 
     public MetricBucket() {

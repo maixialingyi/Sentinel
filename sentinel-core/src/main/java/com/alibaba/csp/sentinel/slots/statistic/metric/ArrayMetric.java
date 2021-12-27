@@ -235,6 +235,7 @@ public class ArrayMetric implements Metric {
 
     @Override
     public void addSuccess(int count) {
+        // 当前时间样本窗口
         WindowWrap<MetricBucket> wrap = data.currentWindow();
         wrap.value().addSuccess(count);
     }

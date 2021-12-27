@@ -123,6 +123,7 @@ public class ContextUtil {
             Map<String, DefaultNode> localCacheNameMap = contextNameNodeMap;
             DefaultNode node = localCacheNameMap.get(name);
             if (node == null) {
+                // 一个线程创建一个上下文, 当线程数超过阈值则不创建
                 if (localCacheNameMap.size() > Constants.MAX_CONTEXT_NAME_SIZE) {
                     setNullContext();
                     return NULL_CONTEXT;

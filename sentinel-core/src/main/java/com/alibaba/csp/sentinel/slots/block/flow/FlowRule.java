@@ -49,11 +49,13 @@ public class FlowRule extends AbstractRule {
     /**
      * The threshold type of flow control (0: thread count, 1: QPS).
      */
+    // 0 线程数  1 qps
     private int grade = RuleConstant.FLOW_GRADE_QPS;
 
     /**
      * Flow control threshold count.
      */
+    // 阈值
     private double count;
 
     /**
@@ -63,6 +65,7 @@ public class FlowRule extends AbstractRule {
      * {@link RuleConstant#STRATEGY_RELATE} for relevant flow control (with relevant resource);
      * {@link RuleConstant#STRATEGY_CHAIN} for chain flow control (by entrance resource).
      */
+    // 流控模式
     private int strategy = RuleConstant.STRATEGY_DIRECT;
 
     /**
@@ -74,6 +77,7 @@ public class FlowRule extends AbstractRule {
      * Rate limiter control behavior.
      * 0. default(reject directly), 1. warm up, 2. rate limiter, 3. warm up + rate limiter
      */
+    // 流控效果 0 直接失败  1 预热令牌桶 WarmUpController  2.令牌桶排队等待RateLimiterController
     private int controlBehavior = RuleConstant.CONTROL_BEHAVIOR_DEFAULT;
 
     private int warmUpPeriodSec = 10;

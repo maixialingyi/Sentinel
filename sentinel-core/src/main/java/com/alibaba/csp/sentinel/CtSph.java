@@ -116,23 +116,25 @@ public class CtSph implements Sph {
 
     private Entry entryWithPriority(ResourceWrapper resourceWrapper, int count, boolean prioritized, Object... args)
         throws BlockException {
+        // 获取线程上下文
         Context context = ContextUtil.getContext();
+        // 创建context时,服务线程数超过阈值会设置为NullContext
         if (context instanceof NullContext) {
             // The {@link NullContext} indicates that the amount of context has exceeded the threshold,
             // so here init the entry only. No rule checking will be done.
-            // 创建上下文时,如果超过最大上下文数 阈值,就不进行规则检查
+            // 不进行规则检查
             return new CtEntry(resourceWrapper, null, context);
         }
 
         if (context == null) {
             // Using default context.
-            // 创建资源    EntranceNode  放入contextNameNodeMap   放入root节点set中
-            // 创建上下文  放入ThreadLocal
+            // 创建入口节点        EntranceNode  放入contextNameNodeMap   放入root节点set中
+            // 创建默认名称上下文   放入ThreadLocal
             context = InternalContextUtil.internalEnter(Constants.CONTEXT_DEFAULT_NAME);
         }
 
         // Global switch is close, no rule checking will do.
-        // 全局开关关闭，无法进行规则检查。
+        // 全局开关关闭，不进行规则检查。
         if (!Constants.ON) {
             return new CtEntry(resourceWrapper, null, context);
         }
@@ -150,6 +152,7 @@ public class CtSph implements Sph {
 
         Entry e = new CtEntry(resourceWrapper, chain, context);
         try {
+            // 规则链 检查
             chain.entry(context, resourceWrapper, null, count, prioritized, args);
         } catch (BlockException e1) {
             e.exit(count, args);

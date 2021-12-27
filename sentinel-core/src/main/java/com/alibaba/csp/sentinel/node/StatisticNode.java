@@ -92,6 +92,8 @@ public class StatisticNode implements Node {
     /**
      * Holds statistics of the recent {@code INTERVAL} milliseconds. The {@code INTERVAL} is divided into time spans
      * by given {@code sampleCount}.
+     * SampleCountProperty.SAMPLE_COUNT 样本窗口数  默认2
+     * IntervalProperty.INTERVAL        时间窗 默认1000毫秒
      */
     private transient volatile Metric rollingCounterInSecond = new ArrayMetric(SampleCountProperty.SAMPLE_COUNT,
         IntervalProperty.INTERVAL);
@@ -244,7 +246,9 @@ public class StatisticNode implements Node {
 
     @Override
     public void addPassRequest(int count) {
+        // 秒为单位
         rollingCounterInSecond.addPass(count);
+
         rollingCounterInMinute.addPass(count);
     }
 

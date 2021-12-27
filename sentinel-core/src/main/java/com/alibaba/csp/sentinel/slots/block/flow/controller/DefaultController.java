@@ -47,7 +47,9 @@ public class DefaultController implements TrafficShapingController {
 
     @Override
     public boolean canPass(Node node, int acquireCount, boolean prioritized) {
+        // 当前时间窗内已统计的数据
         int curCount = avgUsedTokens(node);
+        // 阈值
         if (curCount + acquireCount > count) {
             if (prioritized && grade == RuleConstant.FLOW_GRADE_QPS) {
                 long currentTime;

@@ -40,11 +40,16 @@ import com.alibaba.csp.sentinel.util.TimeUtil;
  */
 public abstract class LeapArray<T> {
 
+    // 样本窗口时间长度
     protected int windowLengthInMs;
+    // 样本数
     protected int sampleCount;
+    // 窗口时间长度毫秒
     protected int intervalInMs;
+    // 窗口时间长度秒
     private double intervalInSecond;
 
+    // 样本窗口数组  WindowWrap样本窗口实例 / T = MetricBucket
     protected final AtomicReferenceArray<WindowWrap<T>> array;
 
     /**
@@ -117,9 +122,10 @@ public abstract class LeapArray<T> {
         if (timeMillis < 0) {
             return null;
         }
-
+        // 计算当前样本窗口id
         int idx = calculateTimeIdx(timeMillis);
         // Calculate current bucket start time.
+        // 计算当前样本窗口开始时间点
         long windowStart = calculateWindowStart(timeMillis);
 
         /*
@@ -131,6 +137,7 @@ public abstract class LeapArray<T> {
          */
         while (true) {
             WindowWrap<T> old = array.get(idx);
+            // 当前窗口不存在 需创建
             if (old == null) {
                 /*
                  *     B0       B1      B2    NULL      B4
@@ -152,6 +159,7 @@ public abstract class LeapArray<T> {
                     // Contention failed, the thread will yield its time slice to wait for bucket available.
                     Thread.yield();
                 }
+                //算出得样本窗口其实时间 = 数组中获取的样本窗口起始时间, 表示已创建,直接返回
             } else if (windowStart == old.windowStart()) {
                 /*
                  *     B0       B1      B2     B3      B4
@@ -165,6 +173,7 @@ public abstract class LeapArray<T> {
                  * that means the time is within the bucket, so directly return the bucket.
                  */
                 return old;
+                //算出得样本窗口其实时间 > 数组中获取的样本窗口起始时间 表示已过时 , 重新设置
             } else if (windowStart > old.windowStart()) {
                 /*
                  *   (old)
@@ -194,6 +203,7 @@ public abstract class LeapArray<T> {
                     // Contention failed, the thread will yield its time slice to wait for bucket available.
                     Thread.yield();
                 }
+                // 除非手动调整时间, 其他不会发生
             } else if (windowStart < old.windowStart()) {
                 // Should not go through here, as the provided time is already behind.
                 return new WindowWrap<T>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
