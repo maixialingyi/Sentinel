@@ -101,6 +101,7 @@ public class StatisticNode implements Node {
     /**
      * Holds statistics of the recent 60 seconds. The windowLengthInMs is deliberately set to 1000 milliseconds,
      * meaning each bucket per second, in this way we can get accurate statistics of each second.
+     * 保存一分钟时间窗口,数组长度60,即60个样本窗口
      */
     private transient Metric rollingCounterInMinute = new ArrayMetric(60, 60 * 1000, false);
 
@@ -246,9 +247,9 @@ public class StatisticNode implements Node {
 
     @Override
     public void addPassRequest(int count) {
-        // 秒为单位
+        // 窗口时间为秒,默认两个样板窗口
         rollingCounterInSecond.addPass(count);
-
+        // 时间窗口为分,60个样板窗口
         rollingCounterInMinute.addPass(count);
     }
 

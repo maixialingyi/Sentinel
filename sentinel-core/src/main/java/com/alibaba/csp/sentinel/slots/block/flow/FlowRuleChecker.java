@@ -69,7 +69,7 @@ public class FlowRuleChecker {
             return true;
         }
 
-        // 集群模式
+        // 来源
         if (rule.isClusterMode()) {
             return passClusterCheck(rule, context, node, acquireCount, prioritized);
         }
